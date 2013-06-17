@@ -1,0 +1,5 @@
+N_radial	3000 
+kc			0.1
+N_theta		3000
+kf			0.01
+alpha		1
