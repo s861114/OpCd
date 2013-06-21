@@ -20,17 +20,17 @@ void WKSP::initial_define_constant(void)
 	// 1 erg = 6.241509e+11 eV
 	a=2.46; // lattice constant 2.46 angstrom
 	d=3.35; // distance between layers 3.35 angstrom
-	e_mass=9.109*10^(-31);
+	e_mass=9.109e-31;
 	imp=376.7303134;
-	c=2.9979*10^8; //m/s
-	kB=8.617*10^(-5);// eV/K
-	h=6.626*10^(-34); //J
-	hbar=1.054*10^(-34); //J
-	hevbar=6.562*10^(-16); //eV
-	hev=4.135*10^(-15); //eV
+	c=2.9979e8; //m/s
+	kB=8.617e-5;// eV/K
+	h=6.626e-34; //J
+	hbar=1.054e-34; //J
+	hevbar=6.562e-16; //eV
+	hev=4.135e-15; //eV
 
-	indc_nlayer_arr={1,2,2,3,3,4,4,4,4,5,5,5,5,5,5,5,5};
-	dielec=8.85418*10^(-12);
+
+	dielec=8.85418e-12;
 
 
 	// tot_th means num of logical CPU.

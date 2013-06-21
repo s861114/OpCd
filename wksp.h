@@ -31,7 +31,7 @@ public:
 
 	//constant
 	void initial_define_constant(void);
-	double indc_nlayer_arr[17];
+	double indc_nlayer_arr[17]={1,2,4,5,6,8,10,15};
 	double gamma0;
 	double gamma1;
 	double gamma2;
@@ -58,6 +58,7 @@ public:
 	double dbar; // d/a (unitless)
 	double esq_a;  //e^2/a
 	double esq_ea; //e^2/a/epsilon
+	double alpha;
 	int tot_th;
 
 	/// memory
@@ -73,9 +74,9 @@ public:
 
 	gsl_matrix_complex*** H; //matrix* Hamailtonian[radial][theta]
 
-	void diag(int indc,double WFM,double nB,double nT,double Ef);
+	void diag_slfcssnt(int indc,double WFM,double nB,double nT,double Ef);
 	void calc_opdc(double eta, double Ef);
-
+	void exec_diag(int indc);
 
 	void set_H(void);
 

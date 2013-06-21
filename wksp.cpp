@@ -35,12 +35,11 @@ int WKSP::calcul_pho(void)
 	return 0;
 }
 
-void WKSP::diag(int indc, double WFM, double nB, double nT, double Ef)
+void WKSP::diag_slfcssnt(int indc, double WFM, double nB, double nT, double Ef)
 {
 	N=indc_nlayer_arr[indc];
 	N2=2*N;
-	
-
+	exec_diag(indc);	
 
 }
 
@@ -50,3 +49,17 @@ void WKSP::calc_opdc(double eta,double Ef)
 {
 }
 
+void exec_diag(int indc)
+{
+	switch (indc)
+	{
+		case 1:set_H_A();break;
+		case 2:set_H_AB();break;
+		case 4:set_H_ABC();break;
+		case 5:set_H_ABA();break;
+		case 6:set_H_ABCA();break;
+		case 8:set_H_ABAB();break;
+		case 10:set_H_ABCAB();break;
+		case 15:set_H_ABABA();break;
+	}
+}
