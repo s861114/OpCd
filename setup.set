@@ -1,5 +1,5 @@
-N_radial	3000 
+N_radial	30000 
 kc			0.1
-N_theta		3000
+N_theta		1
 kf			0.01
 alpha		1

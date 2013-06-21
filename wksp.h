@@ -80,6 +80,7 @@ public:
 	void set_H_ABABA(void);
 	
 	int calcul_pho(void); // wavefunction,eigensate -> density matrix
+	void band_cal(void);
 
 	void set_initial(char* log);
 	void set_initial_n(char* log);

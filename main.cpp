@@ -6,9 +6,9 @@
 int main(void)
 {
 	WKSP wksp;
-
 	wksp.set_H_AB();
-	wksp.calcul_pho();
+	wksp.band_cal();
+	
 
 	return 0;
 }
