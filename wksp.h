@@ -27,11 +27,11 @@ public:
 	int numofthread;
 	int N;  // num of layer
 	int N2; // dim of system.
-	// N2= 2*N for full band model, N2 = 2 for 2band model
+		// N2= 2*N for full band model, N2 = 2 for 2band model
 
 	//constant
 	void initial_define_constant(void);
-	double indc_nlayer_arr[17]={1,2,4,5,6,8,10,15};
+//	int indc_nlayer_arr[8]={1,2,3,3,4,4,5,5};
 	double gamma0;
 	double gamma1;
 	double gamma2;
@@ -74,10 +74,6 @@ public:
 
 	gsl_matrix_complex*** H; //matrix* Hamailtonian[radial][theta]
 
-	void diag_slfcssnt(int indc,double WFM,double nB,double nT,double Ef);
-	void calc_opdc(double eta, double Ef);
-	void exec_diag(int indc);
-
 	void set_H(void);
 
 	void set_H_A(void);
@@ -99,6 +95,10 @@ public:
 	
 	int calcul_pho(void); // wavefunction,eigensate -> density matrix
 	void band_cal(void);
+	void diag_slfcssnt(int indc,double WFM,double nB,double nT,double Ef);
+	void calc_opdc(double eta, double Ef);
+	void exec_diag(int indc);
+
 
 	void set_initial(char* log);
 	void set_initial_n(char* log);

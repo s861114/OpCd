@@ -7,13 +7,14 @@ WKSP::WKSP()
 
 	initial_define_constant();
 	initial_read_setting();
-	initial_malloc();
+	//initial_malloc();
 }
 
 void WKSP::initial_define_constant(void)
 {
 
-		
+	N=2;
+	N2=4;
 	esq = 14.39966058372; // eV*angstrom
 	// e= 4.803205e-10 statC
 	// (1statC)^2 = 1 erg cm
