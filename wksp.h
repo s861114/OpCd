@@ -31,21 +31,33 @@ public:
 
 	//constant
 	void initial_define_constant(void);
+	double indc_nlayer_arr[17];
 	double gamma0;
 	double gamma1;
+	double gamma2;
+	double gamma3;
+	double gamma4;
+	double gamma5;
+	double gamma6;	
 	double epsilon; // dielectric constant
 	double esq; //e^2
+
+	double dielec;
+	double e_mass;
+	double imp;
+	double c;
+	double kB;
+
+	double h;
+	double hbar;
+	double hev;
+	double hevbar;
+
 	double a; //lattice constant 2.46
 	double d; // distance between layers 3.35 angstrom
 	double dbar; // d/a (unitless)
 	double esq_a;  //e^2/a
 	double esq_ea; //e^2/a/epsilon
-	double hv_a; // hbar v0 / a;
-	double alpha; // e^2/(epsilon hbar v0)
-	double alpha0; // e^2/(hbar v0) epsilon=1  alpha<=alpha0;
-	void set_alpha(double new_alpha);
-	void set_epsilon(double new_epsilon);
-
 	int tot_th;
 
 	/// memory
@@ -61,6 +73,10 @@ public:
 
 	gsl_matrix_complex*** H; //matrix* Hamailtonian[radial][theta]
 
+	void diag(int indc,double WFM,double nB,double nT,double Ef);
+	void calc_opdc(double eta, double Ef);
+
+
 	void set_H(void);
 
 	void set_H_A(void);
@@ -71,6 +87,7 @@ public:
 
 	// full band model
 	void set_H_AB(void);
+	
 	void set_H_ABC(void);
 	void set_H_ABCA(void);
 	void set_H_ABCAB(void);
