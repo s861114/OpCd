@@ -87,7 +87,7 @@ public:
 	void band_cal(void);
 	void slfcssnt(void);
 	void opdc(void);
-	void frmlvl_skr(void);
+	double frmlvl_skr(double density_tar);
 
 
 	void set_initial(char* log);

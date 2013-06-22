@@ -7,8 +7,9 @@ int main(void)
 {
 	WKSP wksp;
 	wksp.set_H_AB();
-	wksp.band_cal();
-	wksp.frmlvl_skr();
+	wksp.band_cal();	
+	double Ef=wksp.frmlvl_skr(2e+16);
+	printf("Ef=%f",Ef);
 //	wksp.opdc();	
 	
 

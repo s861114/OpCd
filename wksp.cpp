@@ -69,7 +69,7 @@ void WKSP::band_cal(void)
 
 }
 
-void WKSP::frmlvl_skr(void)
+double WKSP::frmlvl_skr(double density_tar)
 {
 	double k1;
 	double k2;
@@ -79,16 +79,16 @@ void WKSP::frmlvl_skr(void)
 	double lE;
 	double delta=0;
 	double density;
+	double density_old=density_tar;
 	int bandidx;
 	int kcnt;
 	int flag;
-	for (double cyclcEf=Ef/2;cyclcEf<Ef;cyclcEf+=0.005)
+	for (double cyclcEf=-Ef;cyclcEf<Ef;cyclcEf+=0.0001)
 	{
 		cntclc++;
 		density=0;
-
-		//Finding the density corressponding to a given Ef	
-		for (bandidx=2;bandidx==2;bandidx++)
+		//Finding the density corressponding to a given Ef
+		for (bandidx=2;bandidx<N2-1;bandidx++)
 		{
 			k1=0;k2=0;delta=0;hE=0;lE=0;flag=0;
 
@@ -97,8 +97,6 @@ void WKSP::frmlvl_skr(void)
 			{
 				hE=energy[bandidx][kcnt+1][0];
 				lE=energy[bandidx][kcnt][0];
-		//		printf("%d le=%f cyclcEf=%f\n",kcnt,hE,cyclcEf);
-		//		getchar();
 				
 				if( (hE-cyclcEf)*(lE-cyclcEf)<0 )
 				{
@@ -119,7 +117,6 @@ void WKSP::frmlvl_skr(void)
 			
 			}
 EndOfLoop:
-//			printf("%f\n,kcnt=%d, flag=%d\n",k1,kcnt,flag);
 			switch (flag){
 				case 0:delta=0;	break;	
 				case 1:delta=(realK(k1)*realK(k1) )/PI;break;		
@@ -132,11 +129,19 @@ EndOfLoop:
 				density-=delta;				
 		}
 		//end of the part finding the density
-		printf("%e\n",density);
-		break;		
+//		printf("density %e | density_tar %e | density_old %e",density,density_tar,density_old);
+//		getchar();
+		if ((density-density_tar)*(density_old-density_tar)<0)
+		{
+			printf("real value : %f\n",cyclcEf);
+			return cyclcEf;
+			break;
+		}
+		density_old=density;
 	}
-		
-
+	printf("out of range");
+	getchar();
+	
 }
 
 void WKSP::slfcssnt(void)

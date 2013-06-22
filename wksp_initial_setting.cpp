@@ -6,9 +6,6 @@ WKSP::WKSP()
 	N=2;
 	N2=4;
 	vg=0;
-	Ef=0.15;
-	nB=3;
-	nT=0;
 
 	initial_define_constant();
 	initial_read_setting();
