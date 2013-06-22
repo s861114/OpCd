@@ -1,4 +1,6 @@
 #include "wksp.h"
+#define PI 3.14159265358979 
+#define realK(i) i/N_radial*kc/reala
 
 int WKSP::calcul_pho(void)
 {
@@ -67,4 +69,82 @@ void WKSP::band_cal(void)
 
 }
 
+void WKSP::frmlvl_skr(void)
+{
+	double k1;
+	double k2;
+	int cntclc=-1;
+	double drvtE;
+	double hE;
+	double lE;
+	double delta=0;
+	double density;
+	int bandidx;
+	int kcnt;
+	int flag;
+	for (double cyclcEf=Ef/2;cyclcEf<Ef;cyclcEf+=0.005)
+	{
+		cntclc++;
+		density=0;
 
+		//Finding the density corressponding to a given Ef	
+		for (bandidx=2;bandidx==2;bandidx++)
+		{
+			k1=0;k2=0;delta=0;hE=0;lE=0;flag=0;
+
+
+			for (kcnt=0;kcnt<N_radial-3;kcnt++)
+			{
+				hE=energy[bandidx][kcnt+1][0];
+				lE=energy[bandidx][kcnt][0];
+		//		printf("%d le=%f cyclcEf=%f\n",kcnt,hE,cyclcEf);
+		//		getchar();
+				
+				if( (hE-cyclcEf)*(lE-cyclcEf)<0 )
+				{
+					drvtE=(hE-lE)/h_radial; //derivative of energy w.r.t k
+					switch (flag)
+					{
+						case 0:
+							k1=kcnt+(cyclcEf-hE)/drvtE;
+							flag=1;
+							break;
+						case 1:
+							k2=kcnt+(cyclcEf-hE)/drvtE;
+							flag=2;
+							goto EndOfLoop;
+														
+					}
+				}
+			
+			}
+EndOfLoop:
+//			printf("%f\n,kcnt=%d, flag=%d\n",k1,kcnt,flag);
+			switch (flag){
+				case 0:delta=0;	break;	
+				case 1:delta=(realK(k1)*realK(k1) )/PI;break;		
+				case 2:delta=(realK(k2)*realK(k2)-realK(k1)*realK(k1) )/PI;	break;
+			}
+
+			if(bandidx>N-1)
+				density+=delta;
+			else
+				density-=delta;				
+		}
+		//end of the part finding the density
+		printf("%e\n",density);
+		break;		
+	}
+		
+
+}
+
+void WKSP::slfcssnt(void)
+{
+
+
+}
+
+void WKSP::opdc(void)
+{
+}

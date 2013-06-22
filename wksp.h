@@ -27,6 +27,10 @@ public:
 	int numofthread;
 	int N;  // num of layer
 	int N2; // dim of system.
+	double Ef;
+	double nB;
+	double nT;
+	double reala;
 	// N2= 2*N for full band model, N2 = 2 for 2band model
 
 	//constant
@@ -81,6 +85,10 @@ public:
 	
 	int calcul_pho(void); // wavefunction,eigensate -> density matrix
 	void band_cal(void);
+	void slfcssnt(void);
+	void opdc(void);
+	void frmlvl_skr(void);
+
 
 	void set_initial(char* log);
 	void set_initial_n(char* log);

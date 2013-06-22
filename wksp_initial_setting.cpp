@@ -6,6 +6,9 @@ WKSP::WKSP()
 	N=2;
 	N2=4;
 	vg=0;
+	Ef=0.15;
+	nB=3;
+	nT=0;
 
 	initial_define_constant();
 	initial_read_setting();
@@ -22,6 +25,7 @@ void WKSP::initial_define_constant(void)
 	// (1statC)^2 = 1 erg cm
 	// 1 erg = 6.241509e+11 eV
 	a=2.46; // lattice constant 2.46 angstrom
+	reala=2.46e-10;
 	d=3.35; // distance between layers 3.35 angstrom
 	hv_a = 0.5*sqrt(3)*gamma0; // eV
 	esq_a=esq/a;  // eV
@@ -64,6 +68,9 @@ void WKSP::initial_read_setting(void)
 	fgets(dump,100,fp);	sscanf(dump,"%s  %d\n",dump1,&N_theta);	
 	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&kf);		
 	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&alpha);
+	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&Ef);
+	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&nB);
+	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&nT);
 
 	set_alpha(alpha);
 	h_radial = kc / N_radial;

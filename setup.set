@@ -1,5 +1,8 @@
-N_radial	30000 
-kc			0.1
+N_radial	3000
+kc			2
 N_theta		1
 kf			0.01
 alpha		1
+Ef			0.1
+nB			2
+nT			5
