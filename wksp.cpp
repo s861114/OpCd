@@ -61,7 +61,7 @@ void WKSP::band_cal(void)
 		for(int e=0;e<N2;e++)
 
 		{	
-			fprintf(fp,"%f ",energy[e][i][1]);
+			fprintf(fp,"%f ",energy[e][i][0]);
 		}
 		fprintf(fp,"\n");
 	}
@@ -69,6 +69,8 @@ void WKSP::band_cal(void)
 
 }
 
+
+//Searching for the fermi level with a charge carrier diesnty given
 double WKSP::frmlvl_skr(double density_tar)
 {
 	double k1;
@@ -88,7 +90,7 @@ double WKSP::frmlvl_skr(double density_tar)
 		cntclc++;
 		density=0;
 		//Finding the density corressponding to a given Ef
-		for (bandidx=2;bandidx<N2-1;bandidx++)
+		for (bandidx=0;bandidx<N2;bandidx++)
 		{
 			k1=0;k2=0;delta=0;hE=0;lE=0;flag=0;
 
@@ -144,12 +146,106 @@ EndOfLoop:
 	
 }
 
-void WKSP::slfcssnt(void)
+//Self-consistent Calculation
+void WKSP::slfcssnt_Ef(void)
 {
+	double nT,nB,sum1,sum2;
+	double enOld[4]={0,0,0,0};
+	int cnt=0;
+	double alpha=0.1;
+	while(1)
+	{
+		cnt++;
+		set_H_AB();
+		band_cal();
+		find_n();
+		for(int i=0;i<N;i++)
+			en[i]=en[i]*alpha+enOld[i]*(1-alpha);
 
+		nT=0;
+		nB=-sum_en();
+		for(int i=0;i<N-1;i++)
+		{
+			sum1=0;
+			sum2=0;
+			for(int j=i;j<N-1;j++)
+				sum1+=en[j];
+			for(int j=0;j<i;j++)
+				sum2+=en[j];
+			diag_term[i+1]=diag_term[i]+slf_const*((nT-nB)+sum1-sum2);
+		}
+		printf("diag_term0 : %f, diag_term1 : %f\n",diag_term[0],diag_term[1]);
+		for(int i=0;i<N;i++)
+			enOld[i]=en[i];
+		
+		printf("\n%d",cnt);
+		for(int i=0;i<N;i++)
+		{
+			printf("	%e",cnt,en[i]);
+		}
+	}
+	
 
 }
 
+double WKSP::sum_en(void)
+{
+	double sum=0;
+	for(int i=0;i<N;i++)
+		sum=sum+en[i];
+	return sum;
+}
+
+void WKSP::slfcssnt_density(void)
+{
+	set_H_AB();
+	band_cal();
+	find_n();
+	printf("%d",N);
+	for(int i=0;i<N;i++)
+	{
+		printf("%d %e\n",i,en[i]);
+	}
+	printf("\n");
+
+}	
+
+void WKSP::find_n(void)
+{
+	double sum;
+	double temp;
+	double kRes=(kc/reala)/N_radial;
+	for(int i=0;i<N;i++)
+		en[i]=0;
+
+	for (int kidx=0;kidx<N_radial;kidx++)
+	{
+		for (int i=0;i<N;i++) //here i refers to one of the layers
+		{
+			for(int j=0;j<N2;j++) //here j is the band index
+			{
+				if(energy[j][kidx][0]<=Ef)
+				{
+					sum=0;	
+					for(int sumidx=2*i;sumidx<=2*i+1;sumidx++)
+					{						
+						temp=gsl_complex_abs2(gsl_matrix_complex_get(eigen_state[kidx][0],sumidx,j));
+						sum=sum+2/PI*realK(kidx)*temp*kRes;
+					}
+					en[i]=en[i]+sum;
+
+				}	
+
+			}
+			for (int i=0;i<N;i++)
+				en[i]=en[i]-2/PI*realK(kidx)*kRes;
+		}
+
+	}
+			
+
+
+}
 void WKSP::opdc(void)
 {
 }

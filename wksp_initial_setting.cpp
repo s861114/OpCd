@@ -28,7 +28,8 @@ void WKSP::initial_define_constant(void)
 	esq_a=esq/a;  // eV
 	alpha0=esq_a/hv_a; // e^2/(hbar v0) epsilon=1  alpha<=alpha0;
 	dbar = d/a;
-
+	epsilon=8.85418e-12;	
+	slf_const=1.602e-19*0.334e-9/epsilon;
 	set_alpha(1);
 
 	// tot_th means num of logical CPU.
@@ -99,6 +100,10 @@ void WKSP::initial_malloc(void)
 	// N2 is # of bnads of system.
 	energy = mat_double.Tmatrix3(N2,N_radial,N_theta);
 	en = mat_double.Tmatrix1(N2);
+	diag_term=mat_double.Tmatrix1(N);
+
+	for(int ii=0;ii<N;ii++)
+		diag_term[ii]=0;
 
 	for(int i=0; i<N_radial; i++)
 	{
@@ -149,6 +154,8 @@ WKSP::~WKSP()
 	mat_gsl_matrix_complex_pointer.Tfree3(epho);
 	mat_double.Tfree3(energy);
 	mat_double.Tfree1(en);
+	mat_double.Tfree1(diag_term);
+
 	printf("finish memory free\n");
 }
 

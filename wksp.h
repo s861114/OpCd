@@ -47,6 +47,7 @@ public:
 	double hv_a; // hbar v0 / a;
 	double alpha; // e^2/(epsilon hbar v0)
 	double alpha0; // e^2/(hbar v0) epsilon=1  alpha<=alpha0;
+	double slf_const;
 	void set_alpha(double new_alpha);
 	void set_epsilon(double new_epsilon);
 
@@ -62,6 +63,7 @@ public:
 	double*** energy; // energy[band][radial][theta]
 	void set_en(void); // calculate electron density
 	double* en; // electron density[layer]
+	double* diag_term;
 
 	gsl_matrix_complex*** H; //matrix* Hamailtonian[radial][theta]
 
@@ -88,6 +90,11 @@ public:
 	void slfcssnt(void);
 	void opdc(void);
 	double frmlvl_skr(double density_tar);
+	void slfcssnt_density(void);
+	void slfcssnt_Ef(void);
+	void find_n(void);
+	double sum_en(void);
+
 
 
 	void set_initial(char* log);

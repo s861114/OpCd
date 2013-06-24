@@ -33,6 +33,8 @@ void WKSP::set_H_AB(void)
 		{
 			double theta = (j*0.5)*h_theta;
 			double aa = hv_a;
+			double sum1;
+			double sum2;
 
 			gsl_complex offdia01 = gsl_complex_polar(aa*kk,-theta);// = var1 exp(i var2)
 			gsl_complex offdia10 = gsl_complex_conjugate(offdia01);
@@ -48,6 +50,15 @@ void WKSP::set_H_AB(void)
 			gsl_matrix_complex_set(H[i][j],2,3,  offdia01);
 			gsl_matrix_complex_set(H[i][j],3,2,  offdia10);
 			gsl_matrix_complex_set(H[i][j],3,3, gsl_complex_rect(vg,0) );
+			
+			
+
+			
+			gsl_matrix_complex_set(H[i][j],0,0,  gsl_complex_rect(diag_term[0],0));
+			gsl_matrix_complex_set(H[i][j],1,1,  gsl_complex_rect(diag_term[0],0));
+			gsl_matrix_complex_set(H[i][j],2,2,  gsl_complex_rect(diag_term[1],0));
+			gsl_matrix_complex_set(H[i][j],3,3,  gsl_complex_rect(diag_term[1],0));
+
 		}
 	}
 }
