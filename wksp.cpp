@@ -2,9 +2,9 @@
 #define PI 3.14159265358979 
 #define realK(i) i/N_radial*kc/reala
 
-int WKSP::calcul_pho(void)
+int WKSP::calcul_pho(int N, int N2)
 {
-	#pragma omp parallel for
+/*	#pragma omp parallel for
 	for(int i=0; i<N_radial; i++)
 	{
 		int cur_th = omp_get_thread_num();
@@ -34,10 +34,10 @@ int WKSP::calcul_pho(void)
 			}
 		}
 	}
-	return 0;
+	return 0;*/
 }
 
-void WKSP::band_cal(void)
+void WKSP::band_cal(int N,int N2)
 {
 	FILE *fp=fopen("output.txt","w");
 	#pragma omp parallel for
@@ -71,7 +71,7 @@ void WKSP::band_cal(void)
 
 
 //Searching for the fermi level with a charge carrier diesnty given
-double WKSP::frmlvl_skr(double density_tar)
+double WKSP::frmlvl_skr(int N, int N2,double density_tar)
 {
 	double k1;
 	double k2;
@@ -137,7 +137,7 @@ EndOfLoop:
 		{
 			printf("real value : %f\n",cyclcEf);
 			return cyclcEf;
-			break;
+		break;
 		}
 		density_old=density;
 	}
@@ -147,34 +147,41 @@ EndOfLoop:
 }
 
 //Self-consistent Calculation
-void WKSP::slfcssnt_Ef(void)
+void WKSP::slfcssnt_Ef(int N, int N2)
 {
+	Ef=0.1;
 	double nT,nB,sum1,sum2;
-	double enOld[4]={0,0,0,0};
+	double enOld[10]={0,0,0,0,0,0,0,0,0,0};
 	int cnt=0;
-	double alpha=0.1;
+	double alpha=0.01;
 	while(1)
 	{
 		cnt++;
 		set_H_AB();
-		band_cal();
-		find_n();
-		for(int i=0;i<N;i++)
-			en[i]=en[i]*alpha+enOld[i]*(1-alpha);
+		band_cal(N,N2);
+		find_n(N,N2);
+		if (cnt>1){
+				for(int i=0;i<N;i++)
+					en[i]=en[i]*alpha+enOld[i]*(1-alpha);}
 
 		nT=0;
-		nB=-sum_en();
+		nB=-sum_en(N,N2);
+		for(int i=0;i<N;i++)
+			diag_term[i]=0;
+		
+				
 		for(int i=0;i<N-1;i++)
 		{
 			sum1=0;
 			sum2=0;
-			for(int j=i;j<N-1;j++)
+			for(int j=i+1;j<N;j++)
 				sum1+=en[j];
-			for(int j=0;j<i;j++)
+			for(int j=0;j<=i;j++)
 				sum2+=en[j];
+		
 			diag_term[i+1]=diag_term[i]+slf_const*((nT-nB)+sum1-sum2);
 		}
-		printf("diag_term0 : %f, diag_term1 : %f\n",diag_term[0],diag_term[1]);
+		printf("\ndiag_term0 : %f, diag_term1 : %f\n",diag_term[0],diag_term[1]);
 		for(int i=0;i<N;i++)
 			enOld[i]=en[i];
 		
@@ -188,7 +195,7 @@ void WKSP::slfcssnt_Ef(void)
 
 }
 
-double WKSP::sum_en(void)
+double WKSP::sum_en(int N, int N2)
 {
 	double sum=0;
 	for(int i=0;i<N;i++)
@@ -196,21 +203,11 @@ double WKSP::sum_en(void)
 	return sum;
 }
 
-void WKSP::slfcssnt_density(void)
+void WKSP::slfcssnt_density(int N, int N2)
 {
-	set_H_AB();
-	band_cal();
-	find_n();
-	printf("%d",N);
-	for(int i=0;i<N;i++)
-	{
-		printf("%d %e\n",i,en[i]);
-	}
-	printf("\n");
-
 }	
 
-void WKSP::find_n(void)
+void WKSP::find_n(int N, int N2)
 {
 	double sum;
 	double temp;
@@ -246,6 +243,6 @@ void WKSP::find_n(void)
 
 
 }
-void WKSP::opdc(void)
+void WKSP::opdc(int N, int N2)
 {
 }

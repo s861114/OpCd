@@ -25,12 +25,12 @@ public:
 	double c_theta; // 1/N_theta;
 	double kf;
 	int numofthread;
-	int N;  // num of layer
-	int N2; // dim of system.
 	double Ef;
 	double nB;
 	double nT;
 	double reala;
+	int N;
+	int N2;
 	// N2= 2*N for full band model, N2 = 2 for 2band model
 
 	//constant
@@ -54,7 +54,7 @@ public:
 	int tot_th;
 
 	/// memory
-	void initial_malloc(void);
+	void initial_malloc(int Nnew, int N2new);
 	gsl_eigen_hermv_workspace** ws;
 	gsl_vector** eval;
 
@@ -85,15 +85,16 @@ public:
 	void set_H_ABAB(void);
 	void set_H_ABABA(void);
 	
-	int calcul_pho(void); // wavefunction,eigensate -> density matrix
-	void band_cal(void);
-	void slfcssnt(void);
-	void opdc(void);
-	double frmlvl_skr(double density_tar);
-	void slfcssnt_density(void);
-	void slfcssnt_Ef(void);
-	void find_n(void);
-	double sum_en(void);
+	int calcul_pho(int N, int N2); // wavefunction,eigensate -> density matrix
+	void band_cal(int N, int N2);
+	void slfcssnt(int N, int N2);
+	void opdc(int N, int N2);
+	double frmlvl_skr(int N, int N2,double density_tar);
+	void slfcssnt_density(int N, int N2);
+	void slfcssnt_Ef(int N, int N2);
+	void find_n(int N, int N2);
+	double sum_en(int N, int N2);	
+
 
 
 
