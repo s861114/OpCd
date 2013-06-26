@@ -4,5 +4,5 @@ N_theta		1
 kf			0.01
 alpha		1
 Ef		    -0.1
-nB			2
-nT			5
+nB			-2
+nT			0

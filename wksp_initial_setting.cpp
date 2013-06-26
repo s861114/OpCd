@@ -65,6 +65,8 @@ void WKSP::initial_read_setting(void)
 	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&Ef);
 	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&nB);
 	fgets(dump,100,fp);	sscanf(dump,"%s  %lf\n",dump1,&nT);
+	nB=nB*1e+16;
+	nT=nT*1e+16;
 
 	set_alpha(alpha);
 	h_radial = kc / N_radial;

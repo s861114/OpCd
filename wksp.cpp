@@ -1,6 +1,9 @@
 #include "wksp.h"
 #define PI 3.14159265358979 
 #define realK(i) i/N_radial*kc/reala
+#define tol 1e+10
+#define iter_Ef_alpha 0.001
+#define iter_n_alpha 0.001
 
 int WKSP::calcul_pho(int N, int N2)
 {
@@ -54,8 +57,8 @@ void WKSP::band_cal(int N,int N2)
 				energy[e][i][j] = eval[cur_th]->data[e];			
 		}
 	}
-				
-/*	for(int i=0;i<N_radial;i++)
+/*				
+	for(int i=0;i<N_radial;i++)
 	{
 		fprintf(fp,"%d ",i);
 		for(int e=0;e<N2;e++)
@@ -84,7 +87,9 @@ double WKSP::frmlvl_skr(int N, int N2,double density_tar)
 	int bandidx;
 	int kcnt;
 	int flag;
-	for (double cyclcEf=-Ef;cyclcEf<Ef;cyclcEf+=0.0001)
+	double increment;
+	double Ef_range=0.5;
+	for (double cyclcEf=-Ef_range;cyclcEf<Ef_range;cyclcEf+=0.0001)
 	{
 		cntclc++;
 		density=0;
@@ -130,15 +135,16 @@ EndOfLoop:
 				density-=delta;				
 		}
 		//end of the part finding the density
-//		printf("density %e | density_tar %e | density_old %e",density,density_tar,density_old);
-//		getchar();
+		//printf("density %e | density_tar %e | density_old %e",density,density_tar,density_old);
+		//getchar();
 		if ((density-density_tar)*(density_old-density_tar)<0)
 		{
-			printf("real value : %f\n",cyclcEf);
+//			printf("real value : %f\n",cyclcEf);
 			return cyclcEf;
-		break;
+			break;
 		}
 		density_old=density;
+		
 	}
 	printf("out of range");
 	getchar();
@@ -151,7 +157,6 @@ void WKSP::slfcssnt_Ef(int N, int N2)
 	double nT,nB,sum1,sum2;
 	double enOld[10]={0,0,0,0,0,0,0,0,0,0};
 	int cnt=0;
-	double alpha=0.01;
 	double chksum=0;
 	while(1)
 	{
@@ -161,7 +166,7 @@ void WKSP::slfcssnt_Ef(int N, int N2)
 		find_n(N,N2);
 		if (cnt>1){
 				for(int i=0;i<N;i++)
-					en[i]=en[i]*alpha+enOld[i]*(1-alpha);}
+					en[i]=en[i]*iter_Ef_alpha+enOld[i]*(1-iter_Ef_alpha);}
 
 		nT=0;
 		nB=-sum_en(N,N2);
@@ -180,13 +185,18 @@ void WKSP::slfcssnt_Ef(int N, int N2)
 		
 			diag_term[i+1]=diag_term[i]+slf_const*((nT-nB)+sum1-sum2);
 		}
-		printf("\ndiag_term0 : %e, diag_term1 : %e\n",diag_term[0],diag_term[1]);
-		
+		printf("\ndiag_terms : ");
+		for(int i=0;i<N;i++)
+			printf("%e  ",diag_term[i]);
+		printf("\n");
+	
+
 		chksum=0;
 		for(int i=0;i<N;i++)
 			chksum=chksum+en[i]-enOld[i];
-//		if (chksum<1e+10)
-//			break;
+		printf("%e",chksum);
+		if (cnt>10 && (chksum)<tol && -chksum<tol)
+			break;
 
 
 
@@ -212,6 +222,62 @@ double WKSP::sum_en(int N, int N2)
 
 void WKSP::slfcssnt_density(int N, int N2)
 {
+	double sum1,sum2;
+	double enOld[10]={0,0,0,0,0,0,0,0,0,0};
+	int cnt=0;
+	double chksum=0;
+	double tempcnt;
+	while(1)
+	{
+		cnt++;
+		set_H_AB();
+		band_cal(N,N2);
+		Ef=frmlvl_skr(N,N2,-(nB+nT));
+//		getchar();
+		find_n(N,N2);
+
+		if (cnt>1)
+		{
+			for(int i=0;i<N;i++)
+				en[i]=en[i]*iter_Ef_alpha+enOld[i]*(1-iter_Ef_alpha);
+		}
+
+		
+		for(int i=0;i<N;i++)
+			diag_term[i]=0;		
+				
+		for(int i=0;i<N-1;i++)
+		{
+			sum1=0;
+			sum2=0;
+			for(int j=i+1;j<N;j++)
+				sum1+=en[j];
+			for(int j=0;j<=i;j++)
+				sum2+=en[j];
+		
+			diag_term[i+1]=diag_term[i]+slf_const*((nT-nB)+sum1-sum2);
+		}
+		printf("\ndiag_terms : ");
+		for(int i=0;i<N;i++)
+			printf("%e  ",diag_term[i]);
+		
+		tempcnt=0;
+		for(int i=0;i<N;i++){
+			chksum=en[i]-enOld[i];
+			if (cnt>10 && chksum<tol && -chksum<tol)
+				tempcnt++;
+		}
+		if (tempcnt==N)
+			break;
+		for(int i=0;i<N;i++)
+			enOld[i]=en[i];
+		
+		printf("\n%d",cnt);
+		for(int i=0;i<N;i++)
+		{
+			printf("	%e",cnt,en[i]);
+		}
+	}	
 }	
 
 void WKSP::find_n(int N, int N2)

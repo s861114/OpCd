@@ -16,8 +16,7 @@ int main(void)
 		wksp.N2=N2;
 		wksp.initial_malloc(N,N2);
 		wksp.slfcssnt_Ef(N,N2);
-		double Ef=wksp.frmlvl_skr(N,N2,2e+16);
-		printf("Ef=%f",Ef);
+		wksp.slfcssnt_density(N,N2);
 		//	wksp.opdc();	
 		
 	}
