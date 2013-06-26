@@ -55,17 +55,16 @@ void WKSP::band_cal(int N,int N2)
 		}
 	}
 				
-	for(int i=0;i<N_radial;i++)
+/*	for(int i=0;i<N_radial;i++)
 	{
 		fprintf(fp,"%d ",i);
 		for(int e=0;e<N2;e++)
-
 		{	
 			fprintf(fp,"%f ",energy[e][i][0]);
 		}
 		fprintf(fp,"\n");
 	}
-
+*/
 
 }
 
@@ -149,11 +148,11 @@ EndOfLoop:
 //Self-consistent Calculation
 void WKSP::slfcssnt_Ef(int N, int N2)
 {
-	Ef=0.1;
 	double nT,nB,sum1,sum2;
 	double enOld[10]={0,0,0,0,0,0,0,0,0,0};
 	int cnt=0;
 	double alpha=0.01;
+	double chksum=0;
 	while(1)
 	{
 		cnt++;
@@ -181,7 +180,16 @@ void WKSP::slfcssnt_Ef(int N, int N2)
 		
 			diag_term[i+1]=diag_term[i]+slf_const*((nT-nB)+sum1-sum2);
 		}
-		printf("\ndiag_term0 : %f, diag_term1 : %f\n",diag_term[0],diag_term[1]);
+		printf("\ndiag_term0 : %e, diag_term1 : %e\n",diag_term[0],diag_term[1]);
+		
+		chksum=0;
+		for(int i=0;i<N;i++)
+			chksum=chksum+en[i]-enOld[i];
+//		if (chksum<1e+10)
+//			break;
+
+
+
 		for(int i=0;i<N;i++)
 			enOld[i]=en[i];
 		
@@ -190,8 +198,7 @@ void WKSP::slfcssnt_Ef(int N, int N2)
 		{
 			printf("	%e",cnt,en[i]);
 		}
-	}
-	
+	}	
 
 }
 
@@ -217,9 +224,9 @@ void WKSP::find_n(int N, int N2)
 
 	for (int kidx=0;kidx<N_radial;kidx++)
 	{
-		for (int i=0;i<N;i++) //here i refers to one of the layers
+		for (int i=0;i<N;i++) //here i refers to a layer
 		{
-			for(int j=0;j<N2;j++) //here j is the band index
+			for(int j=0;j<N2;j++) //here j is a band index
 			{
 				if(energy[j][kidx][0]<=Ef)
 				{
@@ -227,16 +234,17 @@ void WKSP::find_n(int N, int N2)
 					for(int sumidx=2*i;sumidx<=2*i+1;sumidx++)
 					{						
 						temp=gsl_complex_abs2(gsl_matrix_complex_get(eigen_state[kidx][0],sumidx,j));
-						sum=sum+2/PI*realK(kidx)*temp*kRes;
+						sum=sum+2.0/PI*realK(kidx)*temp*kRes;
+						//sum=sum+temp*4.0/(2*PI)/(2*PI)*h_radial;
 					}
 					en[i]=en[i]+sum;
-
 				}	
 
 			}
-			for (int i=0;i<N;i++)
-				en[i]=en[i]-2/PI*realK(kidx)*kRes;
 		}
+
+		for (int j=0;j<N2/2;j++)
+			en[j]=en[j]-2/PI*realK(kidx)*kRes;
 
 	}
 			

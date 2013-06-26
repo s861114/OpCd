@@ -24,7 +24,7 @@ void WKSP::initial_define_constant(void)
 	esq_a=esq/a;  // eV
 	alpha0=esq_a/hv_a; // e^2/(hbar v0) epsilon=1  alpha<=alpha0;
 	dbar = d/a;
-	epsilon=8.85418e-12;	
+	epsilon=8.85418e-12;
 	slf_const=1.602e-19*0.334e-9/(2*epsilon);
 	set_alpha(1);
 
