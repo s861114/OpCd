@@ -12,7 +12,7 @@ void WKSP::initial_define_constant(void)
 {
 
 	gamma0=3; // 3eV
-	gamma1=0.3;//0.3eV
+	gamma1=0.37;//0.3eV
 	esq = 14.39966058372; // eV*angstrom
 	// e= 4.803205e-10 statC
 	// (1statC)^2 = 1 erg cm
